@@ -1,0 +1,51 @@
+{
+  "model": "Logistic Regression",
+  "params": {
+    "C": 0.1
+  },
+  "use_cluster": false,
+  "threshold": 0.56,
+  "metrics": {
+    "cv_accuracy": 0.7551,
+    "cv_precision": 0.5258,
+    "cv_recall": 0.7866,
+    "cv_f1": 0.6301,
+    "cv_roc_auc": 0.8473,
+    "cv_roc_auc_std": 0.0117,
+    "test_accuracy": 0.7658,
+    "test_precision": 0.5428,
+    "test_recall": 0.746,
+    "test_f1": 0.6284,
+    "test_roc_auc": 0.8436
+  },
+  "mlflow_run_id": "2ee4218f51e241a889e20383b42fa017",
+  "clusters": {
+    "0": {
+      "n": 2239,
+      "tenure": 14.146,
+      "MonthlyCharges": 68.453,
+      "nb_services": 2.266,
+      "month_to_month": 0.968,
+      "churn_rate": 0.485,
+      "name": "Nouveaux clients à risque (contrat mensuel, fibre)"
+    },
+    "1": {
+      "n": 2040,
+      "tenure": 53.787,
+      "MonthlyCharges": 88.242,
+      "nb_services": 4.901,
+      "month_to_month": 0.25,
+      "churn_rate": 0.155,
+      "name": "Clients fidèles premium (ancienneté longue, beaucoup de services)"
+    },
+    "2": {
+      "n": 1355,
+      "tenure": 30.718,
+      "MonthlyCharges": 24.012,
+      "nb_services": 1.18,
+      "month_to_month": 0.312,
+      "churn_rate": 0.069,
+      "name": "Clients basiques (peu de services, souvent sans internet)"
+    }
+  }
+}
