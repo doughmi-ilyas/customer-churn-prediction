@@ -3,3 +3,5 @@
 !app/
 !artifacts/
 **/__pycache__
+!src/
+!api/

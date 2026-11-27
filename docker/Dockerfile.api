@@ -1,0 +1,13 @@
+FROM python:3.14-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir $(grep -E '^(pandas|numpy|scikit-learn|imbalanced-learn|joblib)==' requirements.txt) fastapi "uvicorn[standard]"
+
+COPY src/ src/
+COPY api/ api/
+COPY artifacts/ artifacts/
+
+EXPOSE 8000
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

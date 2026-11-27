@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 import joblib
@@ -6,7 +7,8 @@ import pandas as pd
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
-SERVICES = ["PhoneService", "OnlineSecurity", "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies"]
+sys.path.insert(0, str(ROOT / "src"))
+from churn.features import prepare  # noqa: E402
 
 LABELS = {
     "Yes": "Oui",
@@ -30,19 +32,6 @@ ADDONS = {
     "StreamingTV": "Streaming TV",
     "StreamingMovies": "Streaming films",
 }
-
-
-def prepare(data):
-    out = data.copy()
-    out["TotalCharges"] = pd.to_numeric(out["TotalCharges"], errors="coerce").fillna(0.0)
-    out["charges_per_tenure"] = out["TotalCharges"] / (out["tenure"] + 1)
-    out["is_new_customer"] = (out["tenure"] <= 12).astype(int)
-    out["is_month_to_month"] = (out["Contract"] == "Month-to-month").astype(int)
-    out["is_fiber"] = (out["InternetService"] == "Fiber optic").astype(int)
-    out["is_electronic_check"] = (out["PaymentMethod"] == "Electronic check").astype(int)
-    out["nb_services"] = (out[SERVICES] == "Yes").sum(axis=1)
-    out["tenure_band"] = pd.cut(out["tenure"], bins=[-1, 12, 24, 48, 72], labels=["0-12", "13-24", "25-48", "49-72"]).astype(str)
-    return out
 
 
 def select(label, options):
