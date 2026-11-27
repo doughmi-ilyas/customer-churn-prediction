@@ -92,6 +92,33 @@ docker run -p 8501:8501 churn-app
 
 Puis ouvrir http://localhost:8501.
 
+## API FastAPI
+
+Le même modèle est exposé par une API (`api/main.py`) avec validation des entrées (Pydantic).
+
+```bash
+pip install -r requirements-dev.txt
+uvicorn api.main:app --reload
+```
+
+- `GET /health` : état du service et nom du modèle.
+- `POST /predict` : prend les 19 champs client du dataset Telco (voir `tests/test_api.py` pour un exemple complet) et renvoie `churn_probability`, `churn` (seuil 0.56), `cluster` et `segment`.
+- Documentation interactive : http://localhost:8000/docs
+
+Avec Docker : `docker build -f docker/Dockerfile.api -t churn-api . && docker run -p 8000:8000 churn-api`.
+
+## Tests et CI
+
+```bash
+pytest -q      # 9 tests : features, API, modèle sauvegardé
+ruff check .
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) exécute ruff et pytest, construit les deux images Docker
+(Streamlit et API) et vérifie `/health` sur le conteneur de l'API.
+Le test de qualité du modèle vérifie un plancher de ROC-AUC sur le dataset complet (données
+d'entraînement incluses) : c'est un garde-fou de régression, pas une métrique de test.
+
 ## MLflow
 
 Chaque expérience enregistre les hyperparamètres, le preprocessing, les métriques CV et
@@ -109,12 +136,14 @@ exécutant les notebooks. Un export est disponible dans `reports/mlflow_runs.csv
 
 ```text
 customer-churn-prediction/
+├── api/main.py               # API FastAPI (/health, /predict)
 ├── app/streamlit_app.py      # Application de prédiction
 ├── artifacts/                # Modèle final, modèle de clustering, model_info.json
 ├── assets/                   # Images du README
 ├── data/raw/                 # Dataset brut
 ├── data/processed/           # Données nettoyées + feature engineering
-├── docker/Dockerfile         # Image de l'application
+├── docker/Dockerfile         # Image Streamlit
+├── docker/Dockerfile.api     # Image de l'API
 ├── notebooks/
 │   ├── 01_eda.ipynb
 │   ├── 02_clusters.ipynb
@@ -122,5 +151,7 @@ customer-churn-prediction/
 │   ├── 04_lien.ipynb
 │   └── 05_optimisation_mlflow.ipynb
 ├── reports/                  # Graphiques et export MLflow
+├── src/churn/                # Feature engineering et service de prédiction partagés
+├── tests/                    # pytest
 └── requirements.txt
 ```
