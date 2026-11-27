@@ -66,7 +66,7 @@ sert à l'interprétation et il est affiché dans l'application.
 ## Installation
 
 ```bash
-git clone https://github.com/eliasdeva/customer-churn-prediction.git
+git clone https://github.com/doughmi-ilyas/customer-churn-prediction.git
 cd customer-churn-prediction
 pip install -r requirements.txt
 ```
